@@ -1,0 +1,9 @@
+.uscn-ok { color: #008a20; }
+.uscn-section { margin-top: 2em; }
+.form-table td fieldset label.uscn-check, .uscn-check { display: block; margin: 0 0 6px !important; }
+.uscn-alerts { margin-top: 10px; }
+.uscn-alerts legend { font-weight: 600; margin-bottom: 6px; }
+.uscn-seen .button { margin-left: 6px; vertical-align: baseline; }
+.notice.uscn-blocked { margin: 10px 0 0; }
+.uscn-consent { background: #fff; border: 1px solid #dcdcde; border-left: 4px solid #dba617; padding: 4px 14px 12px; max-width: 760px; margin: 12px 0; }
+.uscn-consent p { margin: 8px 0; }
