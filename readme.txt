@@ -118,6 +118,9 @@ Your host requires FTP details to change files, so remote updates can't run. Ask
 
 == Upgrade Notice ==
 
+= 0.6.0 =
+Adds bulk connect for dashboards moving many sites at once. Nothing changes for sites that are already connected.
+
 = 0.5.0 =
 New security settings: lock this site to your dashboard's address, choose what the dashboard may do, and get alert emails.
 
