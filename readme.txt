@@ -21,6 +21,8 @@ Unstoppable Site Connector links this site to an **Unstoppable Site Manager** da
 * open this site's admin area already signed in (one-click sign-in, can be turned off);
 * build a monthly care report from this site's activity log.
 
+https://www.youtube.com/watch?v=8KX296h_x2U
+
 **How the connection is protected**
 
 * No passwords are stored or sent. The site and the dashboard are paired once with a key that works one time and expires after 15 minutes.
