@@ -168,6 +168,9 @@ final class USCN_Admin {
 		$s['alert_email'] = is_email( $email ) ? $email : '';
 		// phpcs:enable
 		USCN_Security::save( $s );
+		if ( empty( $s['perms']['branding'] ) ) {
+			USCN_Branding::clear(); // Switched off here: remove what the dashboard set.
+		}
 		USCN_Activity::log( 'security', 'settings_saved', home_url() );
 		if ( $ips['bad'] ) {
 			set_transient( 'uscn_bad_ips_' . get_current_user_id(), $ips['bad'], 120 );
@@ -268,6 +271,15 @@ final class USCN_Admin {
 							<?php endforeach; ?>
 						</fieldset>
 						<p class="description"><?php esc_html_e( 'Checking for updates, health and the activity log always works. One-click login is set above.', 'unstoppable-site-connector' ); ?></p>
+						<?php $brand = USCN_Branding::get(); ?>
+						<?php if ( '' !== $brand['text'] ) : ?>
+							<p class="description">
+								<?php
+								/* translators: %s: footer text. */
+								echo esc_html( sprintf( __( 'Admin footer branding set by the dashboard: "%s". It only shows in wp-admin. Switch off "Set the admin footer branding" to remove it.', 'unstoppable-site-connector' ), $brand['text'] ) );
+								?>
+							</p>
+						<?php endif; ?>
 					</td>
 				</tr>
 				<tr>

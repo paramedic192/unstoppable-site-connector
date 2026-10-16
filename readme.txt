@@ -4,7 +4,7 @@ Donate link: https://unstoppablesolutions.app/donate
 Tags: manage multiple sites, updates, maintenance, remote management, agency
 Requires at least: 5.8
 Tested up to: 7.1
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -20,6 +20,7 @@ Unstoppable Site Connector links this site to an **Unstoppable Site Manager** da
 * install, activate, deactivate and delete plugins;
 * open this site's admin area already signed in (one-click sign-in, can be turned off);
 * build a monthly care report from this site's activity log.
+* show their name in this site's admin footer instead of "Thank you for creating with WordPress" (admin screens only, never the public site; can be switched off).
 
 https://www.youtube.com/watch?v=8KX296h_x2U
 
@@ -85,6 +86,9 @@ Your host requires FTP details to change files, so remote updates can't run. Ask
 
 == Changelog ==
 
+= 0.7.0 =
+* Admin footer branding: the dashboard can show its name and a link at the bottom of this site's admin screens, in place of "Thank you for creating with WordPress". Plain text only, never on the public site. Switch off "Set the admin footer branding" under Tools > Unstoppable Site Connector > Security to remove it.
+
 = 0.6.0 =
 * Bulk connect: a copy of this plugin made by your dashboard connects its site to that dashboard by itself, so many sites can be connected at once with a bulk install tool.
 
@@ -119,6 +123,9 @@ Your host requires FTP details to change files, so remote updates can't run. Ask
 * Renamed from FM Connector to Unstoppable Site Connector. Takes over FM Connector's connection, settings and activity log, then removes FM Connector.
 
 == Upgrade Notice ==
+
+= 0.7.0 =
+Adds optional admin footer branding from your dashboard. Nothing changes until your dashboard sets it.
 
 = 0.6.0 =
 Adds bulk connect for dashboards moving many sites at once. Nothing changes for sites that are already connected.

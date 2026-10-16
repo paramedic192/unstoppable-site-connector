@@ -46,6 +46,7 @@ final class USCN_REST {
 			'unpair'   => 'unpair',
 			'login'    => array( 'USCN_Login', 'issue' ),
 			'security' => array( 'USCN_Security', 'rest' ),
+			'branding' => array( 'USCN_Branding', 'rest' ),
 		);
 		foreach ( $signed as $route => $method ) {
 			register_rest_route(

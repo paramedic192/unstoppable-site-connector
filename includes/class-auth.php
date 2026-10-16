@@ -35,6 +35,7 @@ final class USCN_Auth {
 		delete_option( self::OPT_KEYS );
 		delete_option( 'uscn_ack_id' );
 		delete_option( 'uscn_last_push' );
+		USCN_Branding::clear(); // Branding belongs to the dashboard that set it.
 	}
 
 	/* ---------- signing ---------- */
