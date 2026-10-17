@@ -380,6 +380,15 @@ final class USCN_Admin {
 					<tr><th>Status</th><td><strong class="uscn-ok">Connected</strong> to <?php echo esc_html( $conn['dashboard_name'] ); ?></td></tr>
 					<tr><th>Connected since</th><td><?php echo esc_html( wp_date( 'M j, Y g:i a', (int) $conn['paired_at'] ) ); ?></td></tr>
 					<tr><th>Site ID</th><td><code><?php echo esc_html( $conn['site_id'] ); ?></code></td></tr>
+					<?php $move = get_option( USCN_Auth::OPT_HANDOVER ); ?>
+					<?php if ( is_array( $move ) && ! empty( $move['host'] ) && time() < (int) $move['expires'] ) : ?>
+						<tr><th><?php esc_html_e( 'Moving', 'unstoppable-site-connector' ); ?></th><td>
+							<?php
+							/* translators: 1: new dashboard address, 2: date and time. */
+							echo esc_html( sprintf( __( 'Your dashboard is moving to %1$s. Until %2$s, a dashboard at that address can take over this connection once; after that the current dashboard can no longer manage this site.', 'unstoppable-site-connector' ), $move['host'], wp_date( 'M j, g:i a', (int) $move['expires'] ) ) );
+							?>
+						</td></tr>
+					<?php endif; ?>
 					<tr><th>Last report sent</th><td>
 						<?php
 						if ( is_array( $push ) && ! empty( $push['time'] ) ) {

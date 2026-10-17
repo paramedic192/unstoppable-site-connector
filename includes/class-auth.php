@@ -17,6 +17,8 @@ final class USCN_Auth {
 	const OPT_PAIRING = 'uscn_pairing';
 	const MAX_SKEW    = 300; // seconds a signed request stays valid.
 	const PAIR_TTL    = 900; // pairing codes expire after 15 minutes.
+	const OPT_HANDOVER = 'uscn_handover';
+	const HANDOVER_TTL = DAY_IN_SECONDS; // A dashboard move has a day to finish.
 
 	/* ---------- connection state ---------- */
 
@@ -35,6 +37,7 @@ final class USCN_Auth {
 		delete_option( self::OPT_KEYS );
 		delete_option( 'uscn_ack_id' );
 		delete_option( 'uscn_last_push' );
+		delete_option( self::OPT_HANDOVER );
 		USCN_Branding::clear(); // Branding belongs to the dashboard that set it.
 	}
 
@@ -177,6 +180,39 @@ final class USCN_Auth {
 		}
 		delete_option( self::OPT_PAIRING );
 		return true;
+	}
+
+	/**
+	 * A one-time code for moving this site to another dashboard, requested by the
+	 * connected dashboard (signed). It works only for a dashboard at `$host`, for
+	 * 24 hours, and does not replace a code made in wp-admin.
+	 */
+	public static function create_handover_code( $host, $from ) {
+		$code = wp_generate_password( 32, false, false );
+		update_option(
+			self::OPT_HANDOVER,
+			array(
+				'hash'    => hash( 'sha256', $code ),
+				'expires' => time() + self::HANDOVER_TTL,
+				'host'    => strtolower( (string) $host ),
+				'from'    => (string) $from,
+			),
+			false
+		);
+		return $code;
+	}
+
+	/** @return array|false The handover record when the code is valid for a dashboard at $host. */
+	public static function consume_handover_code( $code, $host ) {
+		$h = get_option( self::OPT_HANDOVER );
+		if ( ! is_array( $h ) || empty( $h['hash'] ) || time() > (int) $h['expires'] ) {
+			return false;
+		}
+		if ( ! hash_equals( $h['hash'], hash( 'sha256', (string) $code ) ) || strtolower( (string) $host ) !== $h['host'] ) {
+			return false;
+		}
+		delete_option( self::OPT_HANDOVER );
+		return $h;
 	}
 
 	/**

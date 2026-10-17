@@ -47,6 +47,7 @@ final class USCN_REST {
 			'login'    => array( 'USCN_Login', 'issue' ),
 			'security' => array( 'USCN_Security', 'rest' ),
 			'branding' => array( 'USCN_Branding', 'rest' ),
+			'handover' => 'handover',
 		);
 		foreach ( $signed as $route => $method ) {
 			register_rest_route(
@@ -88,10 +89,18 @@ final class USCN_REST {
 			}
 		}
 
-		if ( ! USCN_Auth::consume_pairing_code( isset( $p['code'] ) ? $p['code'] : '' ) ) {
+		$code     = isset( $p['code'] ) ? $p['code'] : '';
+		$by_code  = USCN_Auth::consume_pairing_code( $code );
+		$handover = false;
+		if ( ! $by_code && $push_url ) {
+			// A dashboard move: the code the old dashboard asked for, valid only for the new dashboard's address.
+			$handover = USCN_Auth::consume_handover_code( $code, (string) wp_parse_url( $push_url, PHP_URL_HOST ) );
+		}
+		if ( ! $by_code && ! $handover ) {
 			set_transient( 'uscn_pair_failures', $failures + 1, HOUR_IN_SECONDS );
 			return new WP_Error( 'uscn_bad_code', 'Pairing code is invalid or expired. Generate a new one in Tools > Unstoppable Site Connector.', array( 'status' => 403 ) );
 		}
+		$old_dashboard = is_array( $handover ) ? $handover['from'] : '';
 
 		$keys    = USCN_Auth::reset_child_keys();
 		$site_id = wp_generate_uuid4();
@@ -112,17 +121,26 @@ final class USCN_REST {
 
 		USCN_Activity::$actor = 'dashboard';
 		USCN_Activity::snapshot();
-		USCN_Activity::log( 'connector', 'paired', home_url() );
+		USCN_Activity::log( 'connector', $old_dashboard ? 'moved' : 'paired', $old_dashboard ? $old_dashboard : home_url() );
 
 		USCN_Security::$ip = USCN_Security::client_ip();
+		$new_name = sanitize_text_field( isset( $p['dashboard_name'] ) ? $p['dashboard_name'] : 'Dashboard' );
 		USCN_Security::alert(
 			'paired',
-			__( 'This site was connected to a dashboard', 'unstoppable-site-connector' ),
-			sprintf(
-				/* translators: %s: dashboard name. */
-				__( 'This site was connected to the dashboard "%s" using a connection key made in its wp-admin. The dashboard can now manage this site within the permissions set under Tools > Unstoppable Site Connector > Security.', 'unstoppable-site-connector' ),
-				sanitize_text_field( isset( $p['dashboard_name'] ) ? $p['dashboard_name'] : 'Dashboard' )
-			)
+			$old_dashboard ? __( 'This site was moved to a new dashboard', 'unstoppable-site-connector' ) : __( 'This site was connected to a dashboard', 'unstoppable-site-connector' ),
+			$old_dashboard
+				? sprintf(
+					/* translators: 1: old dashboard name, 2: new dashboard name, 3: new dashboard address. */
+					__( 'The dashboard "%1$s" moved this site to the dashboard "%2$s" at %3$s. The old dashboard can no longer manage this site. The new one can, within the permissions set under Tools > Unstoppable Site Connector > Security. If you did not expect this, click Disconnect there.', 'unstoppable-site-connector' ),
+					sanitize_text_field( $old_dashboard ),
+					$new_name,
+					(string) wp_parse_url( $push_url, PHP_URL_HOST )
+				)
+				: sprintf(
+					/* translators: %s: dashboard name. */
+					__( 'This site was connected to the dashboard "%s" using a connection key made in its wp-admin. The dashboard can now manage this site within the permissions set under Tools > Unstoppable Site Connector > Security.', 'unstoppable-site-connector' ),
+					$new_name
+				)
 		);
 
 		return rest_ensure_response(
@@ -131,6 +149,34 @@ final class USCN_REST {
 				'child_pubkey' => $keys['public'],
 				'api_version'  => USCN_API_VERSION,
 				'status'       => USCN_Status::collect( false ),
+			)
+		);
+	}
+
+	/**
+	 * Signed: the connected dashboard is moving to a new address. Returns a
+	 * connection key whose code works once, for 24 hours, and only for a
+	 * dashboard at that address. Nothing changes here until the new dashboard
+	 * uses it; then the old dashboard's key stops working.
+	 */
+	public static function handover( WP_REST_Request $request ) {
+		$p    = self::params( $request );
+		$url  = isset( $p['dashboard'] ) ? esc_url_raw( (string) $p['dashboard'], array( 'https', 'http' ) ) : '';
+		$host = $url ? strtolower( (string) wp_parse_url( $url, PHP_URL_HOST ) ) : '';
+		if ( ! $host || ! wp_http_validate_url( $url ) ) {
+			return new WP_Error( 'uscn_bad_dashboard', 'The new dashboard address must be a public web address.', array( 'status' => 400 ) );
+		}
+		$conn = USCN_Auth::connection();
+		$from = is_array( $conn ) && ! empty( $conn['dashboard_name'] ) ? $conn['dashboard_name'] : 'Dashboard';
+		$code = USCN_Auth::create_handover_code( $host, $from );
+		USCN_Activity::$actor = 'dashboard';
+		USCN_Activity::log( 'connector', 'handover_requested', $host );
+		$key = json_decode( (string) base64_decode( USCN_Auth::connection_key( $code ) ), true );
+		$key['handover'] = 1;
+		return rest_ensure_response(
+			array(
+				'key'     => base64_encode( wp_json_encode( $key ) ),
+				'expires' => time() + USCN_Auth::HANDOVER_TTL,
 			)
 		);
 	}

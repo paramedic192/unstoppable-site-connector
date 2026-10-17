@@ -87,6 +87,7 @@ Your host requires FTP details to change files, so remote updates can't run. Ask
 == Changelog ==
 
 = 0.7.0 =
+* Dashboard moves: your web professional can move this site to a new dashboard address. The new dashboard takes over the connection with a one-time code that only works for that address, the old one can no longer manage the site, and you get an alert email.
 * Admin footer branding: the dashboard can show its name and a link at the bottom of this site's admin screens, in place of "Thank you for creating with WordPress". Plain text only, never on the public site. Switch off "Set the admin footer branding" under Tools > Unstoppable Site Connector > Security to remove it.
 
 = 0.6.0 =
