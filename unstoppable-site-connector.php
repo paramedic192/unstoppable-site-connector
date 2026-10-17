@@ -3,7 +3,7 @@
  * Plugin Name: Unstoppable Site Connector
  * Plugin URI: https://unstoppablesolutions.app/plugins/unstoppable-site-connector
  * Description: Connects this site to your Unstoppable Site Manager dashboard for one-click updates, plugin management, health checks, sign-in and client reports. Replaces FM Connector.
- * Version: 0.7.0
+ * Version: 0.8.0
  * Author: Unstoppable Solutions
  * Author URI: https://unstoppablesolutions.app
  * License: GPL-2.0-or-later
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'USCN_VERSION', '0.7.0' );
+define( 'USCN_VERSION', '0.8.0' );
 define( 'USCN_API_VERSION', 1 );
 define( 'USCN_FILE', __FILE__ );
 define( 'USCN_DIR', plugin_dir_path( __FILE__ ) );
