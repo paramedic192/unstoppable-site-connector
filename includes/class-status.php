@@ -123,6 +123,7 @@ final class USCN_Status {
 				'last_push'   => get_option( 'uscn_last_push', null ),
 				'activity_last_id' => USCN_Activity::last_id(),
 				'branding'    => USCN_Branding::hash(),
+				'maintenance' => USCN_Maintenance::summary(),
 			),
 			'security'    => USCN_Security::summary(),
 		);

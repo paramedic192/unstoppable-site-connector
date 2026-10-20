@@ -39,6 +39,7 @@ final class USCN_Auth {
 		delete_option( 'uscn_last_push' );
 		delete_option( self::OPT_HANDOVER );
 		USCN_Branding::clear(); // Branding belongs to the dashboard that set it.
+		USCN_Maintenance::turn_off( 'maintenance_off_here' ); // Never leave a site offline with no dashboard to switch it back.
 	}
 
 	/* ---------- signing ---------- */

@@ -3,7 +3,7 @@
  * Plugin Name: Unstoppable Site Connector
  * Plugin URI: https://unstoppablesolutions.app/plugins/unstoppable-site-connector
  * Description: Connects this site to your Unstoppable Site Manager dashboard for one-click updates, plugin management, health checks, sign-in and client reports. Replaces FM Connector.
- * Version: 0.8.0
+ * Version: 0.9.0
  * Author: Unstoppable Solutions
  * Author URI: https://unstoppablesolutions.app
  * License: GPL-2.0-or-later
@@ -18,7 +18,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'USCN_VERSION', '0.8.0' );
+define( 'USCN_VERSION', '0.9.0' );
 define( 'USCN_API_VERSION', 1 );
 define( 'USCN_FILE', __FILE__ );
 define( 'USCN_DIR', plugin_dir_path( __FILE__ ) );
@@ -37,6 +37,7 @@ require_once USCN_DIR . 'includes/class-migrate.php';
 require_once USCN_DIR . 'includes/class-admin-runner.php';
 require_once USCN_DIR . 'includes/class-enroll.php';
 require_once USCN_DIR . 'includes/class-branding.php';
+require_once USCN_DIR . 'includes/class-maintenance.php';
 
 /**
  * Bootstrap.
@@ -56,6 +57,7 @@ final class USCN_Plugin {
 		USCN_Admin_Runner::hooks();
 		USCN_Enroll::hooks();
 		USCN_Branding::hooks();
+		USCN_Maintenance::hooks();
 
 		if ( is_admin() ) {
 			USCN_Admin::hooks();

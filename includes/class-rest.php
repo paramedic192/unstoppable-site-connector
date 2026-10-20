@@ -48,6 +48,7 @@ final class USCN_REST {
 			'security' => array( 'USCN_Security', 'rest' ),
 			'branding' => array( 'USCN_Branding', 'rest' ),
 			'handover' => 'handover',
+			'maintenance' => array( 'USCN_Maintenance', 'rest' ),
 		);
 		foreach ( $signed as $route => $method ) {
 			register_rest_route(

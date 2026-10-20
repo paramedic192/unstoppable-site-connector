@@ -4,7 +4,7 @@ defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 global $wpdb;
 $wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . 'uscn_activity' ); // phpcs:ignore WordPress.DB
 
-foreach ( array( 'uscn_connection', 'uscn_keys', 'uscn_pairing', 'uscn_versions', 'uscn_ack_id', 'uscn_last_push', 'uscn_branding', 'uscn_db_version', 'uscn_login', 'uscn_migrated', 'uscn_admin_context', 'uscn_security', 'uscn_dashboard_seen', 'uscn_blocked', 'uscn_enroll' ) as $uscn_opt ) {
+foreach ( array( 'uscn_connection', 'uscn_keys', 'uscn_pairing', 'uscn_versions', 'uscn_ack_id', 'uscn_last_push', 'uscn_branding', 'uscn_maintenance', 'uscn_db_version', 'uscn_login', 'uscn_migrated', 'uscn_admin_context', 'uscn_security', 'uscn_dashboard_seen', 'uscn_blocked', 'uscn_enroll' ) as $uscn_opt ) {
 	delete_option( $uscn_opt );
 }
 delete_transient( 'uscn_ssl' );

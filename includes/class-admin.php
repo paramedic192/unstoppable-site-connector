@@ -171,6 +171,9 @@ final class USCN_Admin {
 		if ( empty( $s['perms']['branding'] ) ) {
 			USCN_Branding::clear(); // Switched off here: remove what the dashboard set.
 		}
+		if ( empty( $s['perms']['maintenance'] ) ) {
+			USCN_Maintenance::turn_off( 'maintenance_off_here' );
+		}
 		USCN_Activity::log( 'security', 'settings_saved', home_url() );
 		if ( $ips['bad'] ) {
 			set_transient( 'uscn_bad_ips_' . get_current_user_id(), $ips['bad'], 120 );
@@ -313,6 +316,29 @@ final class USCN_Admin {
 		<div class="wrap">
 			<h1><?php echo esc_html( self::brand_name() ); ?></h1>
 
+			<?php $maint = USCN_Maintenance::get(); ?>
+			<?php if ( $maint['on'] ) : ?>
+				<div class="notice notice-warning"><p>
+					<strong><?php esc_html_e( 'Maintenance mode is on.', 'unstoppable-site-connector' ); ?></strong>
+					<?php esc_html_e( 'The dashboard switched it on. Visitors see a "back soon" page; you and other signed-in editors see the site as usual.', 'unstoppable-site-connector' ); ?>
+					<?php if ( $maint['until'] ) : ?>
+						<?php
+						/* translators: %s: date and time. */
+						echo esc_html( sprintf( __( 'It switches off by itself at %s.', 'unstoppable-site-connector' ), wp_date( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $maint['until'] ) ) );
+						?>
+					<?php endif; ?>
+				</p>
+				<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+					<input type="hidden" name="action" value="uscn_maintenance_off">
+					<?php wp_nonce_field( 'uscn_maintenance_off' ); ?>
+					<p><?php submit_button( __( 'Turn off now', 'unstoppable-site-connector' ), 'secondary', 'submit', false ); ?></p>
+				</form></div>
+			<?php endif; ?>
+
+			<?php if ( 'maintenance_off' === $msg ) : ?>
+				<div class="notice notice-success"><p><?php esc_html_e( 'Maintenance mode is off. Visitors see the site again.', 'unstoppable-site-connector' ); ?></p></div>
+			<?php endif; ?>
+
 			<?php if ( 'disconnected' === $msg ) : ?>
 				<div class="notice notice-success"><p>Disconnected from the dashboard.</p></div>
 			<?php elseif ( 'saved' === $msg ) : ?>
@@ -419,7 +445,7 @@ final class USCN_Admin {
 				<?php wp_nonce_field( 'uscn_generate' ); ?>
 				<div class="uscn-consent">
 					<p><strong><?php esc_html_e( 'What connecting allows', 'unstoppable-site-connector' ); ?></strong></p>
-					<p><?php esc_html_e( 'The dashboard you connect to (run by you or your web professional on their own WordPress site, not by Unstoppable Solutions) will be able to manage this site remotely: run updates, install, activate, deactivate and delete plugins, and open this admin area signed in as an administrator. You can limit each of these under Security below, and disconnect at any time.', 'unstoppable-site-connector' ); ?></p>
+					<p><?php esc_html_e( 'The dashboard you connect to (run by you or your web professional on their own WordPress site, not by Unstoppable Solutions) will be able to manage this site remotely: run updates, install, activate, deactivate and delete plugins, switch maintenance mode on and off, and open this admin area signed in as an administrator. You can limit each of these under Security below, and disconnect at any time.', 'unstoppable-site-connector' ); ?></p>
 					<label><input type="checkbox" name="understand" value="1" required> <?php esc_html_e( 'I understand, and I trust the person who runs that dashboard to manage this site.', 'unstoppable-site-connector' ); ?></label>
 				</div>
 				<?php submit_button( USCN_Auth::is_paired() ? 'Generate key to reconnect' : 'Generate connection key', 'primary', 'submit', false ); ?>
