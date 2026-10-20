@@ -319,8 +319,8 @@ final class USCN_Admin {
 			<?php $maint = USCN_Maintenance::get(); ?>
 			<?php if ( $maint['on'] ) : ?>
 				<div class="notice notice-warning"><p>
-					<strong><?php esc_html_e( 'Maintenance mode is on.', 'unstoppable-site-connector' ); ?></strong>
-					<?php esc_html_e( 'The dashboard switched it on. Visitors see a "back soon" page; you and other signed-in editors see the site as usual.', 'unstoppable-site-connector' ); ?>
+					<strong><?php echo 'coming_soon' === $maint['template'] ? esc_html__( 'The coming soon page is on.', 'unstoppable-site-connector' ) : esc_html__( 'Maintenance mode is on.', 'unstoppable-site-connector' ); ?></strong>
+					<?php esc_html_e( 'The dashboard switched it on. Visitors see a placeholder page; you and other signed-in editors see the site as usual.', 'unstoppable-site-connector' ); ?>
 					<?php if ( $maint['until'] ) : ?>
 						<?php
 						/* translators: %s: date and time. */
@@ -336,7 +336,7 @@ final class USCN_Admin {
 			<?php endif; ?>
 
 			<?php if ( 'maintenance_off' === $msg ) : ?>
-				<div class="notice notice-success"><p><?php esc_html_e( 'Maintenance mode is off. Visitors see the site again.', 'unstoppable-site-connector' ); ?></p></div>
+				<div class="notice notice-success"><p><?php esc_html_e( 'The placeholder page is off. Visitors see the site again.', 'unstoppable-site-connector' ); ?></p></div>
 			<?php endif; ?>
 
 			<?php if ( 'disconnected' === $msg ) : ?>

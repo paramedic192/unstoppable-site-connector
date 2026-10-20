@@ -20,7 +20,7 @@ Unstoppable Site Connector links this site to an **Unstoppable Site Manager** da
 * install, activate, deactivate and delete plugins;
 * open this site's admin area already signed in (one-click sign-in, can be turned off);
 * build a monthly care report from this site's activity log;
-* put this site in maintenance mode: visitors see a short "back soon" page while signed-in editors see the site as usual (can be switched off);
+* put this site in maintenance mode or show a coming soon page: visitors see a short placeholder page while signed-in editors see the site as usual (can be switched off);
 * show their name in this site's admin footer instead of "Thank you for creating with WordPress" (admin screens only, never the public site; can be switched off).
 
 https://www.youtube.com/watch?v=8KX296h_x2U
@@ -88,7 +88,7 @@ Your host requires FTP details to change files, so remote updates can't run. Ask
 == Changelog ==
 
 = 0.9.0 =
-* Maintenance mode from the dashboard: visitors see a short "back soon" page (503 with Retry-After, so search engines know it's temporary) while signed-in editors see the site as usual. wp-admin, the login screen and the REST API keep working. The dashboard can set it to switch off by itself. The admin bar shows when it is on, Tools > Unstoppable Site Connector has a "Turn off now" button, and switching off "Turn maintenance mode on and off" under Security turns it off and keeps it off. Disconnecting turns it off too.
+* Maintenance mode and a Coming soon page from the dashboard. Maintenance shows visitors a short "back soon" page (503 with Retry-After, so search engines know it's temporary); Coming soon is for a site that hasn't launched yet (noindex, so the placeholder stays out of search). Signed-in editors see the site as usual. wp-admin, the login screen and the REST API keep working. The dashboard can set it to switch off by itself. The admin bar shows when it is on, Tools > Unstoppable Site Connector has a "Turn off now" button, and switching off "Turn maintenance mode on and off" under Security turns it off and keeps it off. Disconnecting turns it off too.
 
 = 0.8.0 =
 * Dashboard moves: your web professional can move this site to a new dashboard address. The new dashboard takes over the connection with a one-time code that only works for that address, the old one can no longer manage the site, and you get an alert email.
